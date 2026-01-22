@@ -20,7 +20,7 @@
 本システムは，「衛星データ（マクロ）から推定した土壌水分量」と「地上センサ（ミクロ）で計測した土壌水分量」をエッジデバイス（ラズパイ）で比較する．2つのデータに矛盾がないかラズパイが判断し，信頼性の高い情報を農業事業者に提供する．
 
 ## 2. システム全体像
-ほとんど5.2節と同じ．
+ほとんど5.2節と同じだがセキュリティが不十分なので，それを補強することが主な作業となる．
 <img src="./docs/system_overview.svg" alt="system_overview.svg">
 
 ### データの流れ
@@ -33,13 +33,15 @@
 7. Subscriber: Grafanaが，InfluxDBから時系列データを取得して可視化．
 
 ### セキュリティ
-基本構成（5.2節）では不十分な部分を補強する．
 |脅威の種類|脅威の説明|対策|
-|---|---|---|
-|盗聴|農業事業者の情報が漏洩|TLSによる通信経路の暗号化[^1]|
-|Brokerになりすまし||a[^2]|
+|:---|:---|:---|
+|盗聴|農地の情報が漏洩|TLSによる通信経路の暗号化[^1]|
+|Brokerのなりすまし|他人にデータを送ってしまう|TLSのサーバ証明書による認証[^2]|
+|Publisherのなりすまし|異常なのに正常値を送りつける（逆も然り）|TLSのクライアント証明書による認証[^2]|
+|Subscriberのなりすまし|a|^|
 |改ざん||
 |リプレイ攻撃||
 
 [^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
-[^2]: [SSL/TLSによるMQTT通信のセキュリティ強化 | EMQ](https://www.emqx.com/ja/blog/fortifying-mqtt-communication-security-with-ssl-tls#mqtt-セキュリティに-tls-が不可欠なのはなぜですか)
+[^2]: [mTLS（相互TLS）とは？SSL/TLSとの違いから分かりやすく解説 | GMOグローバルサインカレッジ](https://college.globalsign.com/blog/pki_mtls_20251010/)
+[^3]: [SSL/TLSによるMQTT通信のセキュリティ強化 | EMQ](https://www.emqx.com/ja/blog/fortifying-mqtt-communication-security-with-ssl-tls#mqtt-セキュリティに-tls-が不可欠なのはなぜですか)

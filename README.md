@@ -81,6 +81,15 @@
 ### i. クライアント証明書の導入（実装済み）
 やることが多すぎるのでココは実装済み．
 1. `iot-agri-monitor/gen_certs.sh`を実行
+2. `mosquitto.conf`に追記する．
+```
+require_certificate true      # クライアント認証を必須にする！
+use_identity_as_username true # 証明書のCNをユーザー名として扱う
+allow_anonymous false         # 誰だかわからない接続は拒否
+```
+3. `docker-compose.yml`を編集して，telegrafのコンテナにクライアント証明書をマウントする．
+4. `telegraf.conf`にクライアント証明書の場所を記載する．
+5. ラズパイには`ca.crt`・`publisher.crt`・`publisher.key`をコピーする．
 
 ### ii. トピックベースの認可設定によるアクセス制御
 クライアント認証を導入しただけだと，Mosquittoはクライアントが提示した証明書が`publisher.crt`でも`telegraf.crt`でも同じ「クライアント」としか思っていない．

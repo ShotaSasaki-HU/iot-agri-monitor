@@ -34,6 +34,7 @@ pip-delete-this-directory.txt
 *.pem
 *.csr
 *.crt
+*.srl
 *.p12
 *.pfx
 

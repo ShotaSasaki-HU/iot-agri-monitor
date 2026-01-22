@@ -80,7 +80,7 @@
 5.2節の構成に「クライアント証明書」と「アクセス制御」を追加する担当．
 ### i. クライアント証明書の導入（実装済み）
 やることが多すぎるのでココは実装済み．
-1. `iot-agri-monitor/gen_certs.sh`を実行
+1. `iot-agri-monitor/gen_certs.sh`を実行して，サーバ証明書とクライアント証明書を作成．
 2. `mosquitto.conf`に追記する．
 ```
 require_certificate true      # クライアント認証を必須にする！

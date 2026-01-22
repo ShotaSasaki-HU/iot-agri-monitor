@@ -105,7 +105,7 @@ Grafanaでデータを可視化する担当，InfluxDBからデータを取得�
 
 参考：https://kirmav.blogspot.com/2022/10/grafana.html
 
-こういう感じ．
+こういう感じ．衛星データは更新が数日おきなのでグラフでは一直線に見える．
 <img src="./docs/grafana_example.png" alt="grafana_example.png">
 
 [^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)

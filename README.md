@@ -65,8 +65,8 @@
         "device_id": "raspi_01",
         "timestamp": time.time(),
         "data": {
-            "vwc_satellite": 0.0 から 1.0 の数値,
-            "vwc_ground": 0.0 から 1.0 の数値,
+            "vwc_satellite": 0.0 から 0.6 程度の数値,
+            "vwc_ground": 0.0 から 0.6 程度の数値,
             "status": "OK" か "SENSOR_CONFLICT" か "CRITICAL_DROUGHT"
         }
     }
@@ -76,15 +76,28 @@
 
 ## 担当B（Broker, Subscriber）
 作業ディレクトリ：`iot-agri-monitor/cloud_stack`
+
 5.2節の構成に「クライアント証明書」と「アクセス制御」を追加する担当．
-### i. クライアント証明書の導入
+### i. クライアント証明書の導入（実装済み）
 やることが多すぎるのでココは実装済み．
+1. `iot-agri-monitor/gen_certs.sh`を実行
 
 ### ii. トピックベースの認可設定によるアクセス制御
 クライアント認証を導入しただけだと，Mosquittoはクライアントが提示した証明書が`publisher.crt`でも`telegraf.crt`でも同じ「クライアント」としか思っていない．
-その場合，例えば`telegraf.crt`が漏洩しただけで
+その場合，例えばSubscriberの情報が漏洩しただけで，攻撃者が「Subscriberのなりすまし」だけでなく「Publisherのなりすまし」もすることができる．
+
+そこで，アクセス制御を行う．
+`publisher.crt`を持つクライアントはpublishのみ，`telegraf.crt`を持つクライアントはsubscribeのみしかできないようにBrokerで設定しておく．ACLファイルを作成して，そこに設定を記述するらしい．
+
+参考：https://www.sinetstream.net/docs/userguide/mqtt-authorization.html
 
 ## 担当C（Subscriber）
+Grafanaでデータを可視化する担当，InfluxDBからデータを取得するクエリを書き，良さげなグラフの形式を選ぶ．
+
+参考：https://kirmav.blogspot.com/2022/10/grafana.html
+
+こういう感じ．
+<img src="./docs/grafana_example.png" alt="grafana_example.png">
 
 [^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
 [^2]: [mTLS（相互TLS）とは？SSL/TLSとの違いから分かりやすく解説 | GMOグローバルサインカレッジ](https://college.globalsign.com/blog/pki_mtls_20251010/)

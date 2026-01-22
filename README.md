@@ -42,4 +42,5 @@
 |リプレイ攻撃||
 
 [^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
+
 [^2]: [SSL/TLSによるMQTT通信のセキュリティ強化 | EMQ](https://www.emqx.com/ja/blog/fortifying-mqtt-communication-security-with-ssl-tls)

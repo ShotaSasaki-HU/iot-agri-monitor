@@ -100,6 +100,7 @@ allow_anonymous false         # 誰だかわからない接続は拒否
 
 参考：https://www.ogis-ri.co.jp/column/iot/column/c107973.html
 （「3. アクセス制御と権限管理 : トピックベースの認可設計」のところ）
+
 参考：https://www.sinetstream.net/docs/userguide/mqtt-authorization.html
 
 ## 担当C（Subscriber）

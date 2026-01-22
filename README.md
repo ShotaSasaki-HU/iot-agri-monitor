@@ -25,7 +25,7 @@
 
 # 2. システム全体像
 演習資料5.2節のMQTT over TLS（MQTTS）と殆ど同じ．
-<img src="./docs/system_overview.svg" alt="system_overview.svg">
+<img src="./docs/system_overview.png" alt="system_overview.png">
 
 ## データの流れ
 1. Publisher: ラズパイが，インターネットから衛星データを取得し，土壌水分量を推定．

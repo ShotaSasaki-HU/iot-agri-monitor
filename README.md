@@ -34,11 +34,12 @@
 
 ### セキュリティ
 基本構成（5.2節）では不十分な部分を補強する．
-|脅威の種類|脅威の説明|対策技術|
+|脅威の種類|脅威の説明|対策|
 |---|---|---|
-|盗聴||TLSによる通信経路の暗号化[^1]|
-|Brokerになりすまし||
+|盗聴|農業事業者の情報が漏洩|TLSによる通信経路の暗号化[^1]|
+|Brokerになりすまし|||
 |改ざん||
 |リプレイ攻撃||
 
 [^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
+[^2]: [SSL/TLSによるMQTT通信のセキュリティ強化 | EMQ](https://www.emqx.com/ja/blog/fortifying-mqtt-communication-security-with-ssl-tls#mqtt-セキュリティに-tls-が不可欠なのはなぜですか)

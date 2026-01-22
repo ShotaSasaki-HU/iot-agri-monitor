@@ -6,12 +6,12 @@ flowchart LR
  subgraph WAN["☁️ Internet"]
         CDSE["🛰️ Copernicus Data Space<br>(openEO API)"]
   end
- subgraph Edge["Publisher: 🍓 Raspberry Pi (担当A)"]
+ subgraph Edge["Publisher: 🍓 Raspberry Pi"]
         Logic{"⚡ 突き合わせ判定"}
         Sensor("🌱 仮想の<br>土壌水分センサ")
         MQTT_Pub["📤 MQTT Publisher"]
   end
- subgraph Server["Broker, Subscriber:<br>🐳💻 Docker PC (担当B)"]
+ subgraph Server["Broker, Subscriber:<br>🐳💻 Docker PC"]
         subgraph Broker["Broker"]
             Mosquitto("📡 Mosquitto")
         end
@@ -21,7 +21,7 @@ flowchart LR
             Dash("📊 Grafana")
         end
   end
- subgraph Evil["💀 Attacker (担当C)"]
+ subgraph Evil["💀 Attacker"]
         Script["攻撃スクリプト"]
   end
  subgraph LAN["🏠 Local Area Network"]

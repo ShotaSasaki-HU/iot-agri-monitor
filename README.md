@@ -16,6 +16,12 @@
 
 ## 解決策
 本システムは，「衛星データ（マクロ）から推定した土壌水分量」と「地上センサ（ミクロ）で計測した土壌水分量」をエッジデバイス（ラズパイ）で比較する．2つのデータに矛盾がないかラズパイが判断し，信頼性の高い情報を農業事業者に提供する．
+|衛星データによる土壌水分量|地上センサによる土壌水分量|ラズパイの判断|アクション|
+|:---:|:---:|:---:|:---:|
+|適正|適正|`OK`|何もしない|
+|乾燥|適正|`SENSOR_CONFLICT`|IT担当が対処|
+|適正|乾燥|`SENSOR_CONFLICT`|IT担当が対処|
+|乾燥|乾燥|`CRITICAL_DROUGHT`|農家が対処|
 
 # 2. システム全体像
 演習資料5.2節のMQTT over TLS（MQTTS）と殆ど同じ．
@@ -46,41 +52,41 @@
 |Subscriberのなりすまし|不正なSubscriberがデータを受信する|TLSのクライアント証明書による認証[^2]|×|
 |アクセス権限の逸脱|認可されていないトピックへのPublish／Subscribe|トピックベースの認可設定によるアクセス制御[^1]|×|
 
-[^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
-[^2]: [mTLS（相互TLS）とは？SSL/TLSとの違いから分かりやすく解説 | GMOグローバルサインカレッジ](https://college.globalsign.com/blog/pki_mtls_20251010/)
-[^3]: [SSL／TLS（Part.2）：不正アクセスを防止するSSL/TLS（3）（3/3 ページ） - ＠IT](https://atmarkit.itmedia.co.jp/ait/articles/0010/21/news001_3.html)
-
-
 # 3. 実際の作業
 ## 担当A（Publisher）
 作業ディレクトリ：`iot-agri-monitor/edge_device`
 - 衛星データのAPIを叩いて衛星画像を取得し，土壌水分量を推定[^4]するコードを書く．
 - 仮想地上センサの値を生成するコードを書く．
 - 2つの値を比較した結果を，サーバ認証・クライアント認証ありで送信し続けるコードを書く．
-    - トピック：`iot/field/raspi_01/live`
+    - トピック：`topic = "iot/field/raspi_01/live"`
     - ペイロード（JSON）：
     ```
-    {
+    payload = {
         "device_id": "raspi_01",
         "timestamp": time.time(),
         "data": {
-            "satellite_moisture": ,
-            "ground_moisture": ground_moisture,
-            "ground_health": ground_health,
-            "status": status
+            "vwc_satellite": 0.0 から 1.0 の数値,
+            "vwc_ground": 0.0 から 1.0 の数値,
+            "status": "OK" か "SENSOR_CONFLICT" か "CRITICAL_DROUGHT"
         }
     }
     ```
 
-[^4]: [The optical trapezoid model: A novel approach to remote sensing of soil moisture applied to Sentinel-2 and Landsat-8 observations](https://www.sciencedirect.com/science/article/abs/pii/S0034425717302493)
+    - 送信：`client.publish(topic, json.dumps(payload), qos=1)`
 
 ## 担当B（Broker, Subscriber）
+作業ディレクトリ：`iot-agri-monitor/cloud_stack`
 5.2節の構成に「クライアント証明書」と「アクセス制御」を追加する担当．
 ### i. クライアント証明書の導入
-やることが多すぎるのでココは開発済み．
+やることが多すぎるのでココは実装済み．
 
 ### ii. トピックベースの認可設定によるアクセス制御
 クライアント認証を導入しただけだと，Mosquittoはクライアントが提示した証明書が`publisher.crt`でも`telegraf.crt`でも同じ「クライアント」としか思っていない．
 その場合，例えば`telegraf.crt`が漏洩しただけで
 
 ## 担当C（Subscriber）
+
+[^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)
+[^2]: [mTLS（相互TLS）とは？SSL/TLSとの違いから分かりやすく解説 | GMOグローバルサインカレッジ](https://college.globalsign.com/blog/pki_mtls_20251010/)
+[^3]: [SSL／TLS（Part.2）：不正アクセスを防止するSSL/TLS（3）（3/3 ページ） - ＠IT](https://atmarkit.itmedia.co.jp/ait/articles/0010/21/news001_3.html)
+[^4]: [The optical trapezoid model: A novel approach to remote sensing of soil moisture applied to Sentinel-2 and Landsat-8 observations](https://www.sciencedirect.com/science/article/abs/pii/S0034425717302493)

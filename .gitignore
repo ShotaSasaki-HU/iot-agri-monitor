@@ -49,8 +49,10 @@ mosquitto/certs/
 # 4. Project Specific (IoT Data)
 # ==========================
 # ラズパイ上の仮想センサの一時ファイル
-sensor_state.json
-sensor_state.json.tmp
+sat_state.json
+# sat_state.json.tmp
+ground_state.json
+# ground_state.json.tmp
 
 # アクセス制御リスト（もしパスワード等を含むなら除外推奨だが、今回は構成情報なので含めてもOK）
 # mosquitto/config/acl

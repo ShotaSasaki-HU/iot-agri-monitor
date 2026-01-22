@@ -41,5 +41,4 @@
 |改ざん||
 |リプレイ攻撃||
 
-[^1]: asfhiudahuf
-
+[^1]: [MQTTで強化するセキュリティ対策を分かりやすく解説 | オージス総研](https://www.ogis-ri.co.jp/column/iot/column/c107973.html)

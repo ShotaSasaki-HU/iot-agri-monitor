@@ -30,7 +30,7 @@
 ## データの流れ
 1. Publisher: ラズパイが，インターネットから衛星データを取得し，土壌水分量を推定．
 2. Publisher: ラズパイが，仮想の土壌水分センサから値を取得．
-3. Publisher: ラズパイが，2つのデータを比較判定（正常/異常/矛盾）し，デジタル署名を付与．
+3. Publisher: ラズパイが，2つのデータを比較判定（正常/異常/矛盾）する．
 4. Publisher: MQTTSでBroker（Mosquitto）に送信．
 5. Broker: Mosquittoが，データを受信．
 6. Subscriber: Telegrafが，Mosquittoからデータを取得し，InfluxDBに渡す．

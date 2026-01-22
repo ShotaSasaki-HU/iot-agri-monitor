@@ -67,6 +67,7 @@
         "data": {
             "vwc_satellite": 0.0 から 0.6 程度の数値,
             "vwc_ground": 0.0 から 0.6 程度の数値,
+            "diff": 0.05 など,
             "status": "OK" か "SENSOR_CONFLICT" か "CRITICAL_DROUGHT"
         }
     }

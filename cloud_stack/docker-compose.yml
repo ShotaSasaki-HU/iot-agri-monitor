@@ -1,0 +1,41 @@
+# Docker Compose file for Mosquitto + InfluxDB + Telegraf + Grafana
+services:
+  # --- Broker ---
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - "8883:8883" # ラズパイからの接続用
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/config/acl:/mosquitto/config/acl
+      - ./mosquitto/certs:/mosquitto/certs
+
+  # --- Database ---
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+
+  # --- Subscriber / Collector ---
+  telegraf:
+    image: telegraf:1.29
+    container_name: telegraf
+    depends_on:
+      - influxdb
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      # Telegrafにも証明書を持たせる必要がある！
+      - ./mosquitto/certs:/etc/telegraf/certs:ro
+
+  # --- Dashboard ---
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana

@@ -1,0 +1,71 @@
+# ==========================
+# 1. OS & Editor (Mac/VSCode)
+# ==========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ==========================
+# 2. Python (Virtual Env & Cache)
+# ==========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+# 仮想環境のディレクトリ名（よくあるパターンを網羅）
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==========================
+# 3. Security & Secrets (最重要)
+# ==========================
+# 環境変数ファイル
+.env
+.env.*
+
+# 証明書・秘密鍵ファイル
+# どこにあっても拡張子でブロックして漏洩を防ぐ
+*.key
+*.pem
+*.csr
+*.crt
+*.p12
+*.pfx
+
+# もし「CA証明書(ca.crt)だけは共有したい」場合は、
+# 以下の行のコメントアウト(#)を外してください
+# !**/ca.crt
+
+# 証明書生成用のディレクトリ自体を除外
+mosquitto/certs/
+
+# ==========================
+# 4. Project Specific (IoT Data)
+# ==========================
+# ラズパイ上の仮想センサの一時ファイル
+sensor_state.json
+sensor_state.json.tmp
+
+# アクセス制御リスト（もしパスワード等を含むなら除外推奨だが、今回は構成情報なので含めてもOK）
+# mosquitto/config/acl
+
+# ==========================
+# 5. Docker Persistence (DB Data)
+# ==========================
+# InfluxDBやGrafanaのデータがGitに入ると重くなるので除外
+# ※ docker-compose.yml の volumes 設定に合わせて調整してください
+influxdb/
+grafana/
+
+# ==========================
+# 6. Others
+# ==========================
+# 攻撃テスト用のログや一時ファイル
+*.log
+temp/
+work/

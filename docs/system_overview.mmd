@@ -1,0 +1,45 @@
+---
+config:
+  layout: dagre
+---
+flowchart LR
+ subgraph WAN["☁️ Internet"]
+        CDSE["🛰️ Copernicus Data Space<br>(openEO API)"]
+  end
+ subgraph Edge["Publisher: 🍓 Raspberry Pi (担当A)"]
+        Logic{"⚡ 突き合わせ判定"}
+        Sensor("🌱 仮想の<br>土壌水分センサ")
+        MQTT_Pub["📤 MQTT Publisher"]
+  end
+ subgraph Server["Broker, Subscriber:<br>🐳💻 Docker PC (担当B)"]
+        subgraph Broker["Broker"]
+            Mosquitto("📡 Mosquitto")
+        end
+        subgraph Subscriber["Subscriber"]
+            Telegraf("📥 Telegraf")
+            DB[("🛢️ InfluxDB")]
+            Dash("📊 Grafana")
+        end
+  end
+ subgraph Evil["💀 Attacker (担当C)"]
+        Script["攻撃スクリプト"]
+  end
+ subgraph LAN["🏠 Local Area Network"]
+        Edge
+        Server
+        Evil
+  end
+    Sensor --> Logic
+    CDSE -- HTTPS --> Logic
+    Logic -- 暗号化 --> MQTT_Pub
+    MQTT_Pub == 🔒 MQTTS (Port 8883)<br>[Client Cert Required] ==> Mosquitto
+    Mosquitto --> Telegraf
+    Telegraf --> DB
+    DB --> Dash
+    Script -. ❌ Blocked (No Cert) .-> Mosquitto
+
+     CDSE:::internet
+    classDef internet fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef edge fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef server fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef attack fill:#ffebee,stroke:#c62828,stroke-width:2px

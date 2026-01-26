@@ -9,6 +9,7 @@ services:
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/certs:/mosquitto/certs
+      - ./mosquitto/acl:/mosquitto/config/acl
 
   # --- Database ---
   influxdb:

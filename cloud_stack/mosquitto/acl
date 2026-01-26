@@ -1,0 +1,5 @@
+user raspi_publisher
+topic write iot/field/raspi_01/live
+
+user telegraf_subscriber
+topic read iot/field/raspi_01/live

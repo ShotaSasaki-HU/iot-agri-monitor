@@ -3,43 +3,37 @@ config:
   layout: dagre
 ---
 flowchart LR
- subgraph WAN["☁️ Internet"]
-        CDSE["🛰️ Copernicus Data Space<br>(openEO API)"]
+ subgraph WAN["Internet"]
+        CDSE["🛰️ COPERNICUS DATA SPACE<br>(openEO API)"]
   end
- subgraph Edge["Publisher: 🍓 Raspberry Pi"]
-        Logic{"⚡ 突き合わせ判定"}
-        Sensor("🌱 仮想の<br>土壌水分センサ")
-        MQTT_Pub["📤 MQTT Publisher"]
+ subgraph Edge["Publisher (Raspberry Pi)"]
+        Logic{"突き合わせ判定"}
+        Sensor("仮想の<br>土壌水分センサ")
   end
- subgraph Server["Broker, Subscriber:<br>🐳💻 Docker PC"]
+ subgraph Server["Docker Container"]
         subgraph Broker["Broker"]
-            Mosquitto("📡 Mosquitto")
+            Mosquitto("Mosquitto")
         end
         subgraph Subscriber["Subscriber"]
-            Telegraf("📥 Telegraf")
-            DB[("🛢️ InfluxDB")]
-            Dash("📊 Grafana")
+            Telegraf("Telegraf")
+            DB[("InfluxDB")]
+            Dash("Grafana")
         end
   end
- subgraph Evil["💀 Attacker"]
-        Script["攻撃スクリプト"]
-  end
- subgraph LAN["🏠 Local Area Network"]
+ subgraph LAN["LAN"]
         Edge
         Server
-        Evil
   end
     Sensor --> Logic
     CDSE -- HTTPS --> Logic
-    Logic -- 暗号化 --> MQTT_Pub
-    MQTT_Pub == 🔒 MQTTS (Port 8883)<br>[Client Cert Required] ==> Mosquitto
-    Mosquitto --> Telegraf
+    Logic == MQTTS ==> Mosquitto
+    Mosquitto == MQTTS ==> Telegraf
     Telegraf --> DB
     DB --> Dash
-    Script -. ❌ Blocked (No Cert) .-> Mosquitto
 
-     CDSE:::internet
+      CDSE:::internet
     classDef internet fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef edge fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    classDef server fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef attack fill:#ffebee,stroke:#c62828,stroke-width:2px
+      Edge:::edge
+    classDef edge fill:#fdecea,stroke:#c62828,stroke-width:2px
+      Server:::server
+    classDef server fill:#e3f2fd,stroke:#1565c0,stroke-width:2px

@@ -53,7 +53,7 @@ $ cd iot-agri-monitor/cloud_stack
 $ docker compose up -d
 ```
 5. Grafanaを開いて，クエリを設定しておく．
-6. ラズパイでSubscriberのスクリプトを動かす．
+6. ラズパイでPublisherのスクリプトを動かす．
 ```
 $ cd ~/iot-agri-monitor
 

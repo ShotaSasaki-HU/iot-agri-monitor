@@ -1,10 +1,85 @@
 # 目次
+0. [実行方法](#0-実行方法)
 1. [テーマの概要](#1-テーマの概要)
 2. [システム全体像](#2-システム全体像)
 3. [実際の作業](#3-実際の作業)
     - [担当A（Publisher）](#担当apublisher)
     - [担当B（Broker, Subscriber）](#担当bbroker-subscriber)
     - [担当C（Subscriber)](#担当csubscriber)
+
+# 0. 実行方法
+1. 初期のディレクトリ構成
+```
+iot-agri-monitor
+├── README.md
+├── cloud_stack
+│   ├── docker-compose.yml
+│   ├── gen_certs.sh
+│   ├── grafana
+│   ├── influxdb
+│   ├── mosquitto
+│   │   ├── acl
+│   │   ├── certs
+│   │   └── config
+│   │       └── mosquitto.conf
+│   ├── scp_certs.sh
+│   └── telegraf
+│       └── telegraf.conf
+└── edge_device # <=> pi@group31.local:~/iot-agri-monitor
+    ├── .env
+    ├── certs
+    ├── data
+    ├── requirements.txt
+    └── src
+        ├── ground_sensor.py
+        ├── publisher.py
+        └── sat_monitor.py
+```
+2. 認証局を作成し，サーバ証明書とクライアント証明書を作成する．
+```
+$ cd iot-agri-monitor/cloud_stack
+$ chmod +x gen_certs.sh
+$ sudo ./gen_certs.sh
+```
+3. ラズパイにクライアント証明書をコピーする．
+```
+$ cd iot-agri-monitor/cloud_stack
+$ chmod +x scp_certs.sh
+$ sudo ./scp_certs.sh
+```
+4. Docker ContainerでBrokerとSubscriberを起動する．
+```
+$ cd iot-agri-monitor/cloud_stack
+$ docker compose up -d
+```
+5. Grafanaを開いて，クエリを設定しておく．
+6. ラズパイでSubscriberのスクリプトを動かす．
+```
+$ cd ~/iot-agri-monitor
+
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip install -r requirements.txt
+
+$ python src/ground_sensor.py &
+$ python src/publisher.py
+```
+7. 衛星データを1日1回取得する設定を行う．
+```
+# プロジェクトのルートディレクトリを確認
+$ cd ~/iot-agri-monitor
+$ pwd
+# 出力例: /home/pi/iot-agri-monitor
+
+# 仮想環境のPythonの絶対パスを確認
+$ which python
+# 出力例: /home/pi/iot-agri-monitor/.venv/bin/python
+
+$ crontab -e
+```
+```
+0 9 * * * cd /home/pi/iot-agri-monitor && /home/pi/iot-agri-monitor/.venv/bin/python src/sat_monitor.py >> /home/pi/iot-agri-monitor/cron_log.txt 2>&1
+```
 
 # 1. テーマの概要
 テーマ：「衛星×地上センサのクロスチェックによる農地の遠隔監視システム」

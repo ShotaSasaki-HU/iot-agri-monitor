@@ -1,13 +1,13 @@
 # 目次
-0. [実行方法](#0-実行方法)
-1. [テーマの概要](#1-テーマの概要)
-2. [システム全体像](#2-システム全体像)
-3. [実際の作業](#3-実際の作業)
+1. [実行方法](#0-実行方法)
+2. [テーマの概要](#1-テーマの概要)
+3. [システム全体像](#2-システム全体像)
+4. [実際の作業](#3-実際の作業)
     - [担当A（Publisher）](#担当apublisher)
     - [担当B（Broker, Subscriber）](#担当bbroker-subscriber)
     - [担当C（Subscriber)](#担当csubscriber)
 
-# 0. 実行方法
+# 1. 実行方法
 1. 初期のディレクトリ構成
 ```
 iot-agri-monitor
@@ -81,7 +81,7 @@ $ crontab -e
 0 9 * * * cd /home/pi/iot-agri-monitor && /home/pi/iot-agri-monitor/.venv/bin/python src/sat_monitor.py >> /home/pi/iot-agri-monitor/cron_log.txt 2>&1
 ```
 
-# 1. テーマの概要
+# 2. テーマの概要
 テーマ：「衛星×地上センサのクロスチェックによる農地の遠隔監視システム」
 ## 前提
 農業におけるIoTの一例として，地上の畑などに突き刺した土壌水分センサの値を遠隔でモニターするシステムがある．
@@ -98,7 +98,7 @@ $ crontab -e
 |適正|乾燥|`SENSOR_CONFLICT`|IT担当が対処|
 |乾燥|乾燥|`CRITICAL_DROUGHT`|農家が対処|
 
-# 2. システム全体像
+# 3. システム全体像
 演習資料5.2節のMQTT over TLS（MQTTS）と殆ど同じ．
 <img src="./docs/system_overview.png" alt="system_overview.png">
 
@@ -127,7 +127,7 @@ $ crontab -e
 |Subscriberのなりすまし|不正なSubscriberがデータを受信する|TLSのクライアント証明書による認証[^2]|×|
 |アクセス権限の逸脱|認可されていないトピックへのPublish／Subscribe|トピックベースの認可設定によるアクセス制御[^1]|×|
 
-# 3. 実際の作業
+# 4. 実際の作業
 ## 担当A（Publisher）
 作業ディレクトリ：`iot-agri-monitor/edge_device`
 - 衛星データのAPIを叩いて衛星画像を取得し，土壌水分量を推定[^4]するコードを書く．
